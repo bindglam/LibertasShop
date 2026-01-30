@@ -1,11 +1,10 @@
 package com.bindglam.libertasshop.compatibilities;
 
 import dev.lone.itemsadder.api.CustomStack;
-import net.kyori.adventure.key.Key;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public final class ItemsAdderCompatibility implements Compatibility {
+public final class ItemsAdderCompatibility implements ItemCompatibility {
     @Override
     public void start() {
     }
@@ -19,7 +18,9 @@ public final class ItemsAdderCompatibility implements Compatibility {
         return "ItemsAdder";
     }
 
-    public @Nullable ItemStack getItem(Key key) {
-        return CustomStack.getInstance(key.toString()).getItemStack();
+    public @Nullable ItemStack getItem(String id) {
+        CustomStack stack = CustomStack.getInstance(id);
+        if(stack == null) return null;
+        return stack.getItemStack();
     }
 }

@@ -52,13 +52,12 @@ public final class ShopLoader {
                 stackId = stackId.substring("(itemsadder)".length());
                 itemsadder = true;
             }
-            NamespacedKey stackKey = Objects.requireNonNull(NamespacedKey.fromString(stackId));
             ItemStack stack;
             if(itemsadder)
                 stack = LibertasShopPlugin.getInstance().getCompatibilityManager().getCompatibility(ItemsAdderCompatibility.class)
-                        .orElseThrow().getItem(stackKey);
+                        .orElseThrow().getItem(stackId);
             else
-                stack = new ItemStack(Objects.requireNonNull(Registry.MATERIAL.get(stackKey)));
+                stack = new ItemStack(Objects.requireNonNull(Registry.MATERIAL.get(Objects.requireNonNull(NamespacedKey.fromString(stackId)))));
 
             double price = itemConfig.getDouble("price");
 

@@ -120,20 +120,30 @@ public final class ShopGui implements InventoryHolder, Listener {
         } else if(clickedItem != null && clickedItem.getItemMeta().getPersistentDataContainer().has(ITEM_INDEX_KEY)) {
             ShopItem item = this.shop.items().get(Objects.requireNonNull(clickedItem.getItemMeta().getPersistentDataContainer().get(ITEM_INDEX_KEY, PersistentDataType.INTEGER)));
 
+            BigDecimal price;
+            ItemStack stack = item.stack().get();
+            if(event.isShiftClick()) {
+                price = BigDecimal.valueOf(item.price() * 64);
+                stack.setAmount(64);
+            } else {
+                price = BigDecimal.valueOf(item.price());
+                stack.setAmount(1);
+            }
+
             EconomyCompatibility economy = (EconomyCompatibility) LibertasShopPlugin.getInstance().getCompatibilityManager().getCompatibility(compat -> compat instanceof EconomyCompatibility)
                     .orElseThrow(() -> new IllegalStateException("There is no currency plugin"));
 
             BigDecimal balance = economy.getBalance(player.getUniqueId());
 
-            if(balance.compareTo(BigDecimal.valueOf(item.price())) < 0) {
+            if(balance.compareTo(price) < 0) {
                 player.sendMessage(Component.text("돈이 부족합니다!").color(NamedTextColor.RED));
                 player.playSound(player, Sound.BLOCK_ANVIL_PLACE, 0.5f, 2f);
                 return;
             }
 
-            economy.setBalance(player.getUniqueId(), balance.subtract(BigDecimal.valueOf(item.price())));
+            economy.setBalance(player.getUniqueId(), balance.subtract(price));
 
-            player.getInventory().addItem(item.stack().get());
+            player.getInventory().addItem(stack);
             player.playSound(player, Sound.ENTITY_ITEM_PICKUP, 1f, 1.5f);
         }
     }

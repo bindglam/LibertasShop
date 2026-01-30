@@ -8,6 +8,7 @@ import com.bindglam.libertasshop.shop.item.ShopItem;
 import com.bindglam.libertasshop.utils.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -69,7 +70,7 @@ public final class ShopGui implements InventoryHolder, Listener {
 
             List<Component> lore = stack.lore() == null ? new ArrayList<>() : new ArrayList<>(Objects.requireNonNull(stack.lore()));
             lore.add(Component.empty());
-            lore.add(Component.text("가격 : " + DECIMAL_FORMAT.format(item.price()) + "원").color(NamedTextColor.GRAY));
+            lore.add(Component.text("가격 : " + DECIMAL_FORMAT.format(item.price()) + "원").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
             lore.add(Component.empty());
 
             this.inventory.setItem(i - (this.page * PER_PAGE_MAX_ITEMS),
@@ -81,18 +82,19 @@ public final class ShopGui implements InventoryHolder, Listener {
 
         // 메모리 누수 방지
         ItemStack footer = ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE)
-                .displayName(Component.text("현재 페이지 : " + (this.page+1)).color(NamedTextColor.GRAY))
+                .displayName(Component.empty())
+                .lore(Component.text("현재 페이지 : " + (this.page+1)).color(NamedTextColor.GRAY))
                 .build();
         for(int i = 0; i < 9; i++) {
             this.inventory.setItem(9 * 5 + i, footer);
         }
 
         this.inventory.setItem(PREVIOUS_PAGE_BTN, ItemBuilder.of(Material.ARROW)
-                .displayName(Component.text("이전").color(NamedTextColor.WHITE))
+                .displayName(Component.text("이전").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false))
                 .lore(Component.text("현재 페이지 : " + (this.page+1)).color(NamedTextColor.GRAY))
                 .build());
         this.inventory.setItem(NEXT_PAGE_BTN, ItemBuilder.of(Material.ARROW)
-                .displayName(Component.text("다음").color(NamedTextColor.WHITE))
+                .displayName(Component.text("다음").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false))
                 .lore(Component.text("현재 페이지 : " + (this.page+1)).color(NamedTextColor.GRAY))
                 .build());
     }
@@ -118,6 +120,12 @@ public final class ShopGui implements InventoryHolder, Listener {
 
             this.update();
         } else if(clickedItem != null && clickedItem.getItemMeta().getPersistentDataContainer().has(ITEM_INDEX_KEY)) {
+            if(player.getInventory().firstEmpty() == -1) {
+                player.sendMessage(Component.text("인벤토리가 꽉 찼습니다!").color(NamedTextColor.RED));
+                player.playSound(player, Sound.ENTITY_VILLAGER_NO, 0.5f, 2f);
+                return;
+            }
+
             ShopItem item = this.shop.items().get(Objects.requireNonNull(clickedItem.getItemMeta().getPersistentDataContainer().get(ITEM_INDEX_KEY, PersistentDataType.INTEGER)));
 
             BigDecimal price;

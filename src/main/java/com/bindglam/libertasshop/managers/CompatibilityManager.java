@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public final class CompatibilityManager implements Managerial {
     private static final Logger LOGGER = LoggerFactory.getLogger(CompatibilityManager.class);
@@ -34,6 +35,15 @@ public final class CompatibilityManager implements Managerial {
     public void end() {
         enabledCompatibilities.forEach(Compatibility::end);
         enabledCompatibilities.clear();
+    }
+
+    public Optional<Compatibility> getCompatibility(Predicate<Compatibility> predicate) {
+        for(Compatibility compat : enabledCompatibilities) {
+            if(predicate.test(compat)) {
+                return Optional.of(compat);
+            }
+        }
+        return Optional.empty();
     }
 
     public <T extends Compatibility> Optional<T> getCompatibility(Class<T> clazz) {

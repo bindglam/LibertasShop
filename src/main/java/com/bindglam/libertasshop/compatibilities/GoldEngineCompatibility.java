@@ -6,8 +6,10 @@ import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
-public final class GoldEngineCompatibility implements Compatibility {
+public final class GoldEngineCompatibility implements EconomyCompatibility {
     @Override
     public void start() {
     }
@@ -21,13 +23,25 @@ public final class GoldEngineCompatibility implements Compatibility {
         return "GoldEngine";
     }
 
-    public BigDecimal getBalance(Player player) {
-        Account account = Objects.requireNonNull(GoldEngine.instance().accountManager().getOnlineAccount(player.getUniqueId()));
+    @Override
+    public BigDecimal getBalance(UUID uuid) {
+        Account account;
+        try {
+            account = Objects.requireNonNull(GoldEngine.instance().accountManager().getAccount(uuid).get());
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
         return account.balance();
     }
 
-    public void setBalance(Player player, BigDecimal balance) {
-        Account account = Objects.requireNonNull(GoldEngine.instance().accountManager().getOnlineAccount(player.getUniqueId()));
+    @Override
+    public void setBalance(UUID uuid, BigDecimal balance) {
+        Account account;
+        try {
+            account = Objects.requireNonNull(GoldEngine.instance().accountManager().getAccount(uuid).get());
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
         account.balance(balance);
     }
 }

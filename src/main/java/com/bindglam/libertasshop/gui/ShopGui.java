@@ -1,6 +1,7 @@
 package com.bindglam.libertasshop.gui;
 
 import com.bindglam.libertasshop.LibertasShopPlugin;
+import com.bindglam.libertasshop.compatibilities.EconomyCompatibility;
 import com.bindglam.libertasshop.compatibilities.GoldEngineCompatibility;
 import com.bindglam.libertasshop.shop.Shop;
 import com.bindglam.libertasshop.shop.item.ShopItem;
@@ -119,24 +120,18 @@ public final class ShopGui implements InventoryHolder, Listener {
         } else if(clickedItem != null && clickedItem.getItemMeta().getPersistentDataContainer().has(ITEM_INDEX_KEY)) {
             ShopItem item = this.shop.items().get(Objects.requireNonNull(clickedItem.getItemMeta().getPersistentDataContainer().get(ITEM_INDEX_KEY, PersistentDataType.INTEGER)));
 
-            // what the fuck consumer?!?!
-            AtomicReference<BigDecimal> balance = new AtomicReference<>();
-            AtomicReference<Consumer<BigDecimal>> setter = new AtomicReference<>();
-            LibertasShopPlugin.getInstance().getCompatibilityManager().getCompatibility(GoldEngineCompatibility.class).ifPresent(compat -> {
-                balance.set(compat.getBalance(player));
-                setter.set(b -> compat.setBalance(player, b));
-            });
+            EconomyCompatibility economy = (EconomyCompatibility) LibertasShopPlugin.getInstance().getCompatibilityManager().getCompatibility(compat -> compat instanceof EconomyCompatibility)
+                    .orElseThrow(() -> new IllegalStateException("There is no currency plugin"));
 
-            if(balance.get() == null || setter.get() == null)
-                throw new IllegalStateException("There is no currency plugin");
+            BigDecimal balance = economy.getBalance(player.getUniqueId());
 
-            if(balance.get().compareTo(BigDecimal.valueOf(item.price())) < 0) {
+            if(balance.compareTo(BigDecimal.valueOf(item.price())) < 0) {
                 player.sendMessage(Component.text("돈이 부족합니다!").color(NamedTextColor.RED));
                 player.playSound(player, Sound.BLOCK_ANVIL_PLACE, 0.5f, 2f);
                 return;
             }
 
-            setter.get().accept(balance.get().subtract(BigDecimal.valueOf(item.price())));
+            economy.setBalance(player.getUniqueId(), balance.subtract(BigDecimal.valueOf(item.price())));
 
             player.getInventory().addItem(item.stack().get());
             player.playSound(player, Sound.ENTITY_ITEM_PICKUP, 1f, 1.5f);

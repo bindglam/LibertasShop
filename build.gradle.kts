@@ -24,7 +24,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("dev.lone:api-itemsadder:4.0.10")
     implementation("dev.jorel:commandapi-bukkit-shade:10.1.2")
-    compileOnly("com.github.bindglam.GoldEngine:api:0.0.2")
+    compileOnly("com.github.bindglam.GoldEngine:api:0.0.3")
 }
 
 java {
@@ -46,7 +46,7 @@ tasks {
         minecraftVersion("1.20.1")
 
         downloadPlugins {
-            github("bindglam", "GoldEngine", "0.0.2", "GoldEngine-0.0.2.jar")
+            github("bindglam", "GoldEngine", "0.0.3", "GoldEngine-0.0.3.jar")
         }
     }
 

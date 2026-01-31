@@ -37,7 +37,7 @@ public final class CommandManager implements Managerial {
                                     Player player = (Player) Objects.requireNonNull(args.get("player"));
                                     Shop shop = LibertasShopPlugin.getInstance().getShopManager().registry().getShop((String) Objects.requireNonNull(args.get("shop")));
 
-                                    player.openInventory(new ShopGui(shop).getInventory());
+                                    player.openInventory(new ShopGui(player, shop).getInventory());
                                 })
                 )
                 .register();

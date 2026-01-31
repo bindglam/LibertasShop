@@ -25,7 +25,7 @@ public final class PlayerListener implements Listener {
 
         LibertasShopPlugin.getInstance().getShopManager().registry().entries().forEach(shop -> {
             if(Objects.equals(shop.npcId(), npcId)) {
-                player.openInventory(new ShopGui(shop).getInventory());
+                player.openInventory(new ShopGui(player, shop).getInventory());
             }
         });
     }

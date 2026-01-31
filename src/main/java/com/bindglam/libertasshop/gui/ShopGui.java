@@ -43,13 +43,15 @@ public final class ShopGui implements InventoryHolder, Listener {
     private final ItemCompatibility itemCompat = (ItemCompatibility) LibertasShopPlugin.getInstance().getCompatibilityManager().getCompatibility(compat -> compat instanceof ItemCompatibility)
             .orElse(null);
 
+    private final Player player;
     private final Shop shop;
     private final Inventory inventory;
     private final int updateTask;
 
     private int page = 0;
 
-    public ShopGui(Shop shop) {
+    public ShopGui(Player player, Shop shop) {
+        this.player = player;
         this.shop = shop;
 
         this.inventory = Bukkit.createInventory(this, 9*6, Component.text(this.shop.displayName()));
@@ -92,6 +94,10 @@ public final class ShopGui implements InventoryHolder, Listener {
         for(int i = 0; i < 9; i++) {
             this.inventory.setItem(9 * 5 + i, footer);
         }
+        this.inventory.setItem(9 * 5 + 4, ItemBuilder.of(Material.GOLD_INGOT)
+                .displayName(Component.text("당신의 현재 잔액").color(NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
+                .lore(Component.text("잔액 : " + DECIMAL_FORMAT.format(economyCompat.getBalance(player.getUniqueId())) + "원").color(NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false))
+                .build());
 
         this.inventory.setItem(PREVIOUS_PAGE_BTN, ItemBuilder.of(Material.ARROW)
                 .displayName(Component.text("이전").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false))

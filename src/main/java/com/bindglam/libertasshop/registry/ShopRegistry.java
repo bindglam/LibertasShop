@@ -2,7 +2,9 @@ package com.bindglam.libertasshop.registry;
 
 import com.bindglam.libertasshop.shop.Shop;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +22,10 @@ public final class ShopRegistry {
         if(this.registry.containsKey(id))
             throw new IllegalStateException("Already registered");
         this.registry.put(id, shop);
+    }
+
+    public @Unmodifiable Collection<Shop> entries() {
+        return this.registry.values();
     }
 
     public void clear() {

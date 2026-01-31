@@ -41,7 +41,10 @@ public final class ShopLoader {
     public void load(ConfigurationSection config) {
         String id = config.getName();
 
-        ShopImpl shop = new ShopImpl(id, config.getString("display-name"));
+        Integer npcId = config.getInt("npc-id", -1);
+        if(npcId == -1)
+            npcId = null;
+        ShopImpl shop = new ShopImpl(id, config.getString("display-name"), npcId);
 
         ConfigurationSection itemsConfig = Objects.requireNonNull(config.getConfigurationSection("items"));
         for(int i = 0; i < 1000; i++) {

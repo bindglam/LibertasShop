@@ -18,6 +18,7 @@ repositories {
     maven("https://maven.devs.beer/")
     maven("https://repo.codemc.org/repository/maven-public/")
     maven("https://jitpack.io")
+    maven("https://maven.citizensnpcs.co/repo")
 }
 
 dependencies {
@@ -25,6 +26,7 @@ dependencies {
     compileOnly("dev.lone:api-itemsadder:4.0.10")
     implementation("dev.jorel:commandapi-bukkit-shade:10.1.2")
     compileOnly("com.github.bindglam.GoldEngine:api:0.0.3")
+    compileOnly("net.citizensnpcs:citizensapi:2.0.41-SNAPSHOT")
 }
 
 java {
@@ -38,6 +40,7 @@ paperPluginYaml {
     dependencies {
         server(name = "GoldEngine", load = PaperPluginYaml.Load.BEFORE, required = false, joinClasspath = true)
         server(name = "ItemsAdder", load = PaperPluginYaml.Load.BEFORE, required = false, joinClasspath = true)
+        server(name = "Citizens", load = PaperPluginYaml.Load.BEFORE, required = false, joinClasspath = true)
     }
 }
 

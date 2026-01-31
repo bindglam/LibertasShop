@@ -1,5 +1,6 @@
 package com.bindglam.libertasshop;
 
+import com.bindglam.libertasshop.listeners.PlayerListener;
 import com.bindglam.libertasshop.managers.CommandManager;
 import com.bindglam.libertasshop.managers.CompatibilityManager;
 import com.bindglam.libertasshop.managers.ShopManager;
@@ -15,6 +16,8 @@ public final class LibertasShopPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         this.commandManager.start();
         this.compatibilityManager.start();

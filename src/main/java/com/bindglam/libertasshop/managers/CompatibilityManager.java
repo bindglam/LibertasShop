@@ -1,5 +1,6 @@
 package com.bindglam.libertasshop.managers;
 
+import com.bindglam.libertasshop.compatibilities.CitizensCompatibility;
 import com.bindglam.libertasshop.compatibilities.Compatibility;
 import com.bindglam.libertasshop.compatibilities.GoldEngineCompatibility;
 import com.bindglam.libertasshop.compatibilities.ItemsAdderCompatibility;
@@ -15,7 +16,7 @@ import java.util.function.Predicate;
 public final class CompatibilityManager implements Managerial {
     private static final Logger LOGGER = LoggerFactory.getLogger(CompatibilityManager.class);
 
-    private final List<Compatibility> compatibilities = List.of(new ItemsAdderCompatibility(), new GoldEngineCompatibility());
+    private final List<Compatibility> compatibilities = List.of(new ItemsAdderCompatibility(), new GoldEngineCompatibility(), new CitizensCompatibility());
 
     private final List<Compatibility> enabledCompatibilities = new ArrayList<>();
 

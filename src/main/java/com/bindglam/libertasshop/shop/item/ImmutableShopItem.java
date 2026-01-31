@@ -4,6 +4,6 @@ import com.bindglam.libertasshop.utils.ImmutableItemStack;
 
 public record ImmutableShopItem(
         ImmutableItemStack stack,
-        double price
+        Value value
 ) implements ShopItem {
 }

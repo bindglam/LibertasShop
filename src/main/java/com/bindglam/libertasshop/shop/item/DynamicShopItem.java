@@ -4,11 +4,11 @@ import com.bindglam.libertasshop.utils.ImmutableItemStack;
 
 public final class DynamicShopItem implements ShopItem {
     private final ImmutableItemStack stack;
-    private double price;
+    private Value value;
 
-    public DynamicShopItem(ImmutableItemStack stack, double price) {
+    public DynamicShopItem(ImmutableItemStack stack, Value value) {
         this.stack = stack;
-        this.price = price;
+        this.value = value;
     }
 
     @Override
@@ -17,11 +17,11 @@ public final class DynamicShopItem implements ShopItem {
     }
 
     @Override
-    public double price() {
-        return this.price;
+    public Value value() {
+        return this.value;
     }
 
-    public void price(double price) {
-        this.price = price;
+    public void value(Value value) {
+        this.value = value;
     }
 }

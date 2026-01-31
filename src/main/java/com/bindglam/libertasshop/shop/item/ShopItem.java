@@ -5,5 +5,5 @@ import com.bindglam.libertasshop.utils.ImmutableItemStack;
 public interface ShopItem {
     ImmutableItemStack stack();
 
-    double price();
+    Value value();
 }

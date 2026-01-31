@@ -4,6 +4,7 @@ import com.bindglam.libertasshop.LibertasShopPlugin;
 import com.bindglam.libertasshop.compatibilities.ItemsAdderCompatibility;
 import com.bindglam.libertasshop.shop.ShopImpl;
 import com.bindglam.libertasshop.shop.item.ImmutableShopItem;
+import com.bindglam.libertasshop.shop.item.Value;
 import com.bindglam.libertasshop.utils.ImmutableItemStack;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -55,13 +56,16 @@ public final class ShopLoader {
             ItemStack stack;
             if(itemsadder)
                 stack = LibertasShopPlugin.getInstance().getCompatibilityManager().getCompatibility(ItemsAdderCompatibility.class)
-                        .orElseThrow().getItem(stackId);
+                        .orElseThrow().getCustomItem(stackId);
             else
                 stack = new ItemStack(Objects.requireNonNull(Registry.MATERIAL.get(Objects.requireNonNull(NamespacedKey.fromString(stackId)))));
 
-            double price = itemConfig.getDouble("price");
+            Value value = new Value(
+                    itemConfig.getDouble("price.buy"),
+                    itemConfig.getDouble("price.sell")
+            );
 
-            shop.registerItem(new ImmutableShopItem(ImmutableItemStack.of(stack), price)); // TODO : 시세 변동
+            shop.registerItem(new ImmutableShopItem(ImmutableItemStack.of(stack), value)); // TODO : 시세 변동
         }
 
         registry.registerShop(id, shop);

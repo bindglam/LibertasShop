@@ -2,15 +2,25 @@ package com.bindglam.libertasshop.utils;
 
 import org.bukkit.inventory.ItemStack;
 
-public final class ImmutableItemStack {
-    private final ItemStack itemStack;
+import java.util.function.Supplier;
 
-    private ImmutableItemStack(ItemStack itemStack) {
+public final class ImmutableItemStack {
+    private final Supplier<ItemStack> itemStack;
+
+    private ImmutableItemStack(Supplier<ItemStack> itemStack) {
         this.itemStack = itemStack;
     }
 
+    private ImmutableItemStack(ItemStack itemStack) {
+        this.itemStack = () -> itemStack;
+    }
+
     public ItemStack get() {
-        return itemStack.clone();
+        return itemStack.get();
+    }
+
+    public static ImmutableItemStack of(Supplier<ItemStack> itemStack) {
+        return new ImmutableItemStack(itemStack);
     }
 
     public static ImmutableItemStack of(ItemStack itemStack) {

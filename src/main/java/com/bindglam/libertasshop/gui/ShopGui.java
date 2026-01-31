@@ -188,6 +188,13 @@ public final class ShopGui implements InventoryHolder, Listener {
                                         .add(BigDecimal.valueOf(item.value().sellPrice())));
                                 break;
                             }
+                        } else {
+                            if(Objects.equals(shopItemCustomItemId, customItemId)){
+                                itemStack.setAmount(itemStack.getAmount() - 1);
+                                economyCompat.setBalance(player.getUniqueId(), economyCompat.getBalance(player.getUniqueId())
+                                        .add(BigDecimal.valueOf(item.value().sellPrice())));
+                                break;
+                            }
                         }
                     }
                 }

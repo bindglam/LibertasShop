@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public final class ShopLoader {
     private static final File SHOPS_FOLDER = new File("plugins/LibertasShop/shops");
@@ -53,12 +54,13 @@ public final class ShopLoader {
                 stackId = stackId.substring("(itemsadder)".length());
                 itemsadder = true;
             }
-            ItemStack stack;
+            String finalStackId = stackId;
+            Supplier<ItemStack> stack;
             if(itemsadder)
-                stack = LibertasShopPlugin.getInstance().getCompatibilityManager().getCompatibility(ItemsAdderCompatibility.class)
-                        .orElseThrow().getCustomItem(stackId);
+                stack = () -> LibertasShopPlugin.getInstance().getCompatibilityManager().getCompatibility(ItemsAdderCompatibility.class)
+                        .orElseThrow().getCustomItem(finalStackId);
             else
-                stack = new ItemStack(Objects.requireNonNull(Registry.MATERIAL.get(Objects.requireNonNull(NamespacedKey.fromString(stackId)))));
+                stack = () -> new ItemStack(Objects.requireNonNull(Registry.MATERIAL.get(Objects.requireNonNull(NamespacedKey.fromString(finalStackId)))));
 
             Value value = new Value(
                     itemConfig.getDouble("price.buy"),
